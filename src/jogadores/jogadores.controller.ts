@@ -10,13 +10,11 @@ export class JogadoresController {
 
   @Post()
   async criarAtualizarJogador(@Body() criarJogadorDTO: CriarJogadorDTO) {
-    return JSON.stringify({
-      teste: true,
-    });
+    return await this.jogadoresService.criarAtualizarJogador(criarJogadorDTO);
   }
 
   @Get()
   async consultarJogadores(): Promise<Jogador[]> {
-    return this.jogadoresService.consultarTodosJogadores();
+    return await this.jogadoresService.consultarTodosJogadores();
   }
 }
