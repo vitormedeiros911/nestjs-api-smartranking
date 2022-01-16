@@ -1,5 +1,6 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as fs from 'fs';
 
 import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';
@@ -20,6 +21,8 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+
+  fs.writeFileSync('./swagger.json', JSON.stringify(document));
   SwaggerModule.setup('api', app, document, {
     customSiteTitle: 'Smart Ranking',
   });
