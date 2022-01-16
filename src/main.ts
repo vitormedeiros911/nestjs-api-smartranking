@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
@@ -12,6 +13,13 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const httpAdapter = app.get(HttpAdapterHost);
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      skipMissingProperties: true,
+    }),
+  );
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 

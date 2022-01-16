@@ -1,9 +1,19 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { AtualizarJogadorDTO } from './dto/atualizar-jogador.dto';
 import { CriarJogadorDTO } from './dto/criar-jogador.dto';
 import { Jogador } from './interfaces/jogador.interface';
 import { JogadoresService } from './jogadores.service';
+import { JogadoresValidacaoParametrosPipe } from './pipes/validacoes-parametros.pipe';
 
 @ApiTags('Jogadores')
 @Controller('api/v1/jogadores')
@@ -11,26 +21,42 @@ export class JogadoresController {
   constructor(private readonly jogadoresService: JogadoresService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Cria ou atualiza um jogador' })
-  async criarAtualizarJogador(@Body() criaJogadorDto: CriarJogadorDTO) {
-    await this.jogadoresService.criarAtualizarJogador(criaJogadorDto);
+  @ApiOperation({ summary: 'Cria um jogador' })
+  async criarJogador(@Body() criaJogadorDto: CriarJogadorDTO) {
+    return await this.jogadoresService.criarJogador(criaJogadorDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Busca todos os Jogadores ou somente 1 por e-mail' })
-  async consultarJogadores(
-    @Query('email') email: string,
-  ): Promise<Jogador[] | Jogador> {
-    if (email) {
-      return await this.jogadoresService.consultarJogadorPeloEmail(email);
-    } else {
-      return await this.jogadoresService.consultarTodosJogadores();
-    }
+  @ApiOperation({ summary: 'Busca todos os Jogadores' })
+  async consultarTodosJogadores(): Promise<Jogador[]> {
+    return await this.jogadoresService.consultarTodosJogadores();
   }
 
-  @Delete()
+  @Get('/:_id')
+  @ApiOperation({ summary: 'Busca um jogador por id' })
+  async consultarJogadorPorId(
+    @Param('_id', JogadoresValidacaoParametrosPipe) _id: string,
+  ): Promise<Jogador> {
+    return await this.jogadoresService.consultarJogadorPorId(_id);
+  }
+
+  @Put('/:_id')
+  @ApiOperation({ summary: 'Atualiza as informações de um jogador' })
+  async atualizarJogador(
+    @Body() atualizarJogadorDTO: AtualizarJogadorDTO,
+    @Param('_id', JogadoresValidacaoParametrosPipe) _id: string,
+  ) {
+    return await this.jogadoresService.atualizarJogador(
+      _id,
+      atualizarJogadorDTO,
+    );
+  }
+
+  @Delete('/:_id')
   @ApiOperation({ summary: 'Deleta um jogador' })
-  async deletarJogador(@Query('email') email: string): Promise<void> {
-    await this.jogadoresService.deletarJogador(email);
+  async deletarJogador(
+    @Param('_id', JogadoresValidacaoParametrosPipe) _id: string,
+  ): Promise<void> {
+    await this.jogadoresService.deletarJogador(_id);
   }
 }
