@@ -12,8 +12,6 @@ import { JogadoresModule } from './jogadores/jogadores.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         uri: configService.get('MONGO_URI'),
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
       }),
     }),
     JogadoresModule,

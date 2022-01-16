@@ -12,21 +12,37 @@ export class JogadoresService {
   ) {}
 
   async criarAtualizarJogador(
-    criarJogadorDto: CriarJogadorDTO,
+    criaJogadorDto: CriarJogadorDTO,
   ): Promise<Jogador> {
-    const { email } = criarJogadorDto;
+    const { email } = criaJogadorDto;
 
     const jogadorEncontrado = await this.jogadorModel.findOne({ email }).exec();
 
-    if (!jogadorEncontrado) {
-      return await this.atualizar(criarJogadorDto);
+    if (jogadorEncontrado) {
+      return await this.atualizar(criaJogadorDto);
     } else {
-      return await this.criar(criarJogadorDto);
+      return await this.criar(criaJogadorDto);
     }
   }
 
-  private async criar(criarJogadorDto: CriarJogadorDTO): Promise<Jogador> {
-    const jogadorCriado = new this.jogadorModel(criarJogadorDto);
+  async consultarTodosJogadores(): Promise<Jogador[]> {
+    return await this.jogadorModel.find().exec();
+  }
+
+  async consultarJogadorPeloEmail(email: string): Promise<Jogador> {
+    const jogadorEncontrado = await this.jogadorModel.findOne({ email }).exec();
+    if (!jogadorEncontrado) {
+      throw new NotFoundException(`Jogador com e-mail ${email} não encontrado`);
+    }
+    return jogadorEncontrado;
+  }
+
+  async deletarJogador(email): Promise<any> {
+    return await this.jogadorModel.remove({ email }).exec();
+  }
+
+  private async criar(criaJogadorDto: CriarJogadorDTO): Promise<Jogador> {
+    const jogadorCriado = new this.jogadorModel(criaJogadorDto);
     return await jogadorCriado.save();
   }
 
@@ -37,25 +53,5 @@ export class JogadoresService {
         { $set: criarJogadorDto },
       )
       .exec();
-  }
-
-  async deletarJogador(email: string) {
-    return await this.jogadorModel.remove({ email }).exec();
-  }
-
-  async consultarTodosJogadores(): Promise<Jogador[]> {
-    return await this.jogadorModel.find().exec();
-  }
-
-  async consultarJogadorPeloEmail(email: string): Promise<Jogador> {
-    const jogador = await this.jogadorModel.findOne({ email }).exec();
-
-    if (!jogador) {
-      throw new NotFoundException(
-        `Jogador com o e-mail ${email}, não encontrado.`,
-      );
-    }
-
-    return jogador;
   }
 }
