@@ -5,6 +5,7 @@ import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { JogadoresModule } from './jogadores/jogadores.module';
 import { CategoriasModule } from './categorias/categorias.module';
+import { DesafiosModule } from './desafios/desafios.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CategoriasModule } from './categorias/categorias.module';
     JogadoresModule,
     ConfigModule,
     CategoriasModule,
+    DesafiosModule,
   ],
 })
 export class AppModule {}
