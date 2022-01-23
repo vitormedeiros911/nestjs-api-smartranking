@@ -8,9 +8,9 @@ import {
   Post,
   Put,
   Query,
-  UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { DesafiosService } from './desafios.service';
 import { AtribuirDesafioPartidaDto } from './dto/atribuir-desafio-partida.dto';
@@ -19,6 +19,7 @@ import { CriarDesafioDto } from './dto/criar-desafio.dto';
 import { Desafio } from './interfaces/desafio.interface';
 import { DesafioStatusValidacaoPipe } from './pipes/desafio-status-validation.pipe';
 
+@ApiTags('Desafios')
 @Controller('api/v1/desafios')
 export class DesafiosController {
   constructor(private readonly desafiosService: DesafiosService) {}
@@ -26,7 +27,7 @@ export class DesafiosController {
   private readonly logger = new Logger(DesafiosController.name);
 
   @Post()
-  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: 'Criar um novo desafio' })
   async criarDesafio(
     @Body() criarDesafioDto: CriarDesafioDto,
   ): Promise<Desafio> {
@@ -35,6 +36,7 @@ export class DesafiosController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Busca todos os desafios' })
   async consultarDesafios(
     @Query('idJogador') _id: string,
   ): Promise<Array<Desafio>> {
@@ -44,6 +46,7 @@ export class DesafiosController {
   }
 
   @Put('/:desafio')
+  @ApiOperation({ summary: 'Atualiza um desafio' })
   async atualizarDesafio(
     @Body(DesafioStatusValidacaoPipe) atualizarDesafioDto: AtualizarDesafioDto,
     @Param('desafio') _id: string,
@@ -52,6 +55,7 @@ export class DesafiosController {
   }
 
   @Post('/:desafio/partida/')
+  @ApiOperation({ summary: 'Atualiza a partida de um desafio' })
   async atribuirDesafioPartida(
     @Body(ValidationPipe) atribuirDesafioPartidaDto: AtribuirDesafioPartidaDto,
     @Param('desafio') _id: string,
@@ -63,6 +67,7 @@ export class DesafiosController {
   }
 
   @Delete('/:_id')
+  @ApiOperation({ summary: 'Deleta um desafio' })
   async deletarDesafio(@Param('_id') _id: string): Promise<void> {
     await this.desafiosService.deletarDesafio(_id);
   }

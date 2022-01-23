@@ -1,4 +1,5 @@
-import { PipeTransform, BadRequestException } from '@nestjs/common';
+import { BadRequestException, PipeTransform } from '@nestjs/common';
+
 import { DesafioStatus } from '../interfaces/desafio-status.enum';
 
 export class DesafioStatusValidacaoPipe implements PipeTransform {
