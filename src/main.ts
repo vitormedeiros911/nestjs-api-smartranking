@@ -5,8 +5,8 @@ import * as fs from 'fs';
 
 import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';
-import { AllExceptionsFilter } from './shared/exception.filter';
-import { LoggingInterceptor } from './shared/logging.interceptor';
+import { AllExceptionsFilter } from './shared/filters/exception.filter';
+import { LoggingInterceptor } from './shared/middlewares/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
