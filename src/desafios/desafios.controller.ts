@@ -55,7 +55,7 @@ export class DesafiosController {
   }
 
   @Post('/:desafio/partida/')
-  @ApiOperation({ summary: 'Atualiza a partida de um desafio' })
+  @ApiOperation({ summary: 'Atribui uma partida a um desafio' })
   async atribuirDesafioPartida(
     @Body(ValidationPipe) atribuirDesafioPartidaDto: AtribuirDesafioPartidaDto,
     @Param('desafio') _id: string,
