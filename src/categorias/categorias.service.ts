@@ -74,15 +74,25 @@ export class CategoriasService {
     await this.jogadoresService.consultarJogadorPorId(idJogador);
 
     const jogadorCadastradoCategoria = await this.categoriaModel
-      .find({ categoria })
+      .findOne()
       .where('jogadores')
       .in(idJogador as any)
       .exec();
 
     if (jogadorCadastradoCategoria)
       throw new ConflictException(
-        `Jogador ${idJogador} já cadastrado na Categoria ${categoria}`,
+        `Jogador ${idJogador} já cadastrado na Categoria ${jogadorCadastradoCategoria.categoria}`,
       );
+
+    const jogadores = await this.jogadoresService.consultarTodosJogadores();
+
+    const jogadorFilter = jogadores.filter(
+      (jogador) => jogador._id == idJogador,
+    );
+
+    if (jogadorFilter.length == 0) {
+      throw new BadRequestException(`O id ${idJogador} não é um jogador!`);
+    }
 
     categoriaEncontrada.jogadores.push(idJogador as any);
     await this.categoriaModel
