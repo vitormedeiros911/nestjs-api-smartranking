@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Logger,
   Param,
   Post,
   Put,
@@ -24,14 +23,11 @@ import { DesafioStatusValidacaoPipe } from './pipes/desafio-status-validation.pi
 export class DesafiosController {
   constructor(private readonly desafiosService: DesafiosService) {}
 
-  private readonly logger = new Logger(DesafiosController.name);
-
   @Post()
   @ApiOperation({ summary: 'Criar um novo desafio' })
   async criarDesafio(
     @Body() criarDesafioDto: CriarDesafioDto,
   ): Promise<Desafio> {
-    this.logger.log(`criarDesafioDto: ${JSON.stringify(criarDesafioDto)}`);
     return await this.desafiosService.criarDesafio(criarDesafioDto);
   }
 
